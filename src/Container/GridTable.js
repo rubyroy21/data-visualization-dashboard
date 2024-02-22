@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   Table,
   TableContainer,
@@ -12,24 +12,33 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Paper,
 } from "@mui/material";
 import useTableStyles from "../CustomStyles/useTableStyles";
 import SearchInput from "../Components/SearchInput/SearchInput";
 import { TableData } from "../App";
 import paginator from "../Components/Pagination/paginator";
 import { Download } from "@mui/icons-material";
+import { CSVLink } from "react-csv"; // Import CSVLink component
+import "../css/grid-table.css";
+import Chart from "./Chart";
+
+export const FilteredDataContext = createContext();
 
 const GridTable = () => {
   const classes = useTableStyles();
-  const data = useContext(TableData);
-  const count = Math.ceil(data.length / 3);
+  const allData = useContext(TableData);
   const [page, setPage] = React.useState(1);
   const [filterOption, setFilterOption] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState(allData);
   const [flag, setFlag] = useState(false);
 
+  useEffect(() => {
+    setFilteredData(allData);
+  }, [allData]);
+
   const handleChange = (event, value) => {
-    setPage(paginator(data, value, 3).page);
+    setPage(paginator(filteredData, value, 3).page);
   };
 
   const optionSelected = (e) => {
@@ -39,7 +48,7 @@ const GridTable = () => {
 
   const handleSearchChange = (event) => {
     const inputValue = event.target.value.toLowerCase();
-    const filtered = data.filter((item) =>
+    const filtered = allData.filter((item) =>
       item.username.toLowerCase().includes(inputValue)
     );
     setFilteredData(filtered);
@@ -69,7 +78,7 @@ const GridTable = () => {
   const renderFilterOptions = (filterOption) => {
     if (filterOption) {
       let options = Array.from(
-        new Set(data.map((element) => element[filterOption]))
+        new Set(allData.map((element) => element[filterOption]))
       );
       return options.map((option, i) => (
         <MenuItem key={i} value={option}>
@@ -84,7 +93,7 @@ const GridTable = () => {
   const filterOptionSelected = (e) => {
     let { value } = e.target;
     if (value) {
-      let filteredData = data.filter(
+      let filteredData = allData.filter(
         (element) => element[filterOption] == value
       );
       setFilteredData(filteredData);
@@ -92,9 +101,20 @@ const GridTable = () => {
   };
 
   const handleReset = () => {
-    setFilteredData(data);
+    setFilteredData(allData);
     setFlag(false);
     setFilterOption("");
+  };
+
+  // Function to generate CSV data
+  const generateCSVData = () => {
+    const csvData = filteredData.length ? filteredData : allData;
+    if (csvData.length === 0) return []; // Return empty array if no data available
+    const csvHeaders = Object.keys(csvData[0]);
+    const csvRows = csvData.map((item) =>
+      csvHeaders.map((header) => item[header])
+    );
+    return [csvHeaders, ...csvRows];
   };
 
   return (
@@ -114,25 +134,32 @@ const GridTable = () => {
             <div style={{ display: "flex", gap: "10px" }}>
               <SearchInput handleSearchChange={handleSearchChange} />
 
-              <FormControl
-                sx={{ m: 1, minWidth: 120, height: "20px" }}
-                size="small"
-              >
-                <InputLabel id="demo-select-small-label">Filter By</InputLabel>
-                <Select
-                  labelId="demo-select-small-label"
-                  id="demo-simple-select"
-                  value={filterOption}
-                  label="Filter By"
-                  onChange={optionSelected}
+              <div>
+                <FormControl
+                  sx={{
+                    m: 1,
+                    minWidth: 120,
+                  }}
+                  size="small"
                 >
-                  <MenuItem value="zone">zone</MenuItem>
-                  <MenuItem value="device_brand">device_brand</MenuItem>
-                  <MenuItem value="sdk_int">sdk_int</MenuItem>
-                  <MenuItem value="vehicle_brand">vehicle_brand</MenuItem>
-                  <MenuItem value="vehicle_cc">vehicle_cc</MenuItem>
-                </Select>
-              </FormControl>
+                  <InputLabel id="demo-select-small-label">
+                    Filter By
+                  </InputLabel>
+                  <Select
+                    labelId="demo-select-small-label"
+                    id="demo-simple-select"
+                    value={filterOption}
+                    label="Filter By"
+                    onChange={optionSelected}
+                  >
+                    <MenuItem value="zone">zone</MenuItem>
+                    <MenuItem value="device_brand">device_brand</MenuItem>
+                    <MenuItem value="sdk_int">sdk_int</MenuItem>
+                    <MenuItem value="vehicle_brand">vehicle_brand</MenuItem>
+                    <MenuItem value="vehicle_cc">vehicle_cc</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
               {flag === true ? (
                 <>
                   <FormControl
@@ -152,14 +179,26 @@ const GridTable = () => {
                       {renderFilterOptions(filterOption)}
                     </Select>
                   </FormControl>
-                  <Button variant="contained" onClick={handleReset}>
-                    Reset
-                  </Button>
+                  <div className="center-alignment">
+                    <Button
+                      variant="contained"
+                      onClick={handleReset}
+                      size="small"
+                    >
+                      Reset
+                    </Button>
+                  </div>
                 </>
               ) : null}
-              <Button variant="contained">
-                <Download />
-              </Button>
+
+              {/* Add CSVLink component for downloading CSV */}
+              <div className="center-alignment">
+                <CSVLink data={generateCSVData()} filename="data.csv">
+                  <Button variant="contained" size="small">
+                    <Download />
+                  </Button>
+                </CSVLink>
+              </div>
             </div>
           </div>
         </div>
@@ -176,9 +215,11 @@ const GridTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.length
-              ? renderTableData(filteredData)
-              : renderTableData(data)}
+            <FilteredDataContext.Provider value={filteredData}>
+              {filteredData.length
+                ? renderTableData(filteredData)
+                : renderTableData(allData)}
+            </FilteredDataContext.Provider>
           </TableBody>
         </Table>
       </TableContainer>
@@ -191,12 +232,20 @@ const GridTable = () => {
         }}
       >
         <Pagination
-          count={count}
+          count={Math.ceil(filteredData.length / 3)}
           page={page}
           onChange={handleChange}
           color="primary"
         />
       </div>
+      <br />
+      <Paper sx={{ padding: "10px" }}>
+        {/* Provide filtered data to the context */}
+        <FilteredDataContext.Provider value={filteredData}>
+          {/* Render the Chart component */}
+          <Chart />
+        </FilteredDataContext.Provider>
+      </Paper>
     </div>
   );
 };

@@ -1,61 +1,156 @@
-import React, { PureComponent } from "react";
-import { BarChart, Bar, ResponsiveContainer } from "recharts";
+import React, { useContext, useState, useEffect } from "react";
+import {
+  PieChart,
+  Pie,
+  ResponsiveContainer,
+  Cell,
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
+import { FilteredDataContext } from "./GridTable";
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+const Chart = () => {
+  const filteredData = useContext(FilteredDataContext);
+  const [filterApplied, setFilterApplied] = useState(false);
+  const [zone, setZone] = useState("All Zones");
 
-export default class Chart extends PureComponent {
-  static demoUrl = "https://codesandbox.io/s/tiny-bar-chart-35meb";
+  useEffect(() => {
+    if (filteredData && filteredData.length > 0) {
+      setFilterApplied(true);
+      setZone(filteredData[0].zone);
+    } else {
+      setFilterApplied(false);
+      setZone("All Zones");
+    }
+  }, [filteredData]);
 
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={150} height={40} data={data}>
-          <Bar dataKey="uv" fill="#8884d8" />
+  // Function to calculate distribution data for PIE chart
+  const calculateDistribution = (data, key) => {
+    const distribution = {};
+    data.forEach((item) => {
+      distribution[item[key]] = (distribution[item[key]] || 0) + 1;
+    });
+    return Object.keys(distribution).map((label) => ({
+      name: label,
+      value: distribution[label],
+    }));
+  };
+
+  // Get data for charts based on the selected zone
+  const getChartData = (zone) => {
+    const filteredDataByZone = zone
+      ? filteredData.filter((item) => item.zone === zone)
+      : filteredData;
+    const deviceBrandDistribution = calculateDistribution(
+      filteredDataByZone,
+      "device_brand"
+    );
+    const vehicleBrandDistribution = calculateDistribution(
+      filteredDataByZone,
+      "vehicle_brand"
+    );
+    const vehicleCCDistribution = calculateDistribution(
+      filteredDataByZone,
+      "vehicle_cc"
+    );
+    return {
+      deviceBrandDistribution,
+      vehicleBrandDistribution,
+      vehicleCCDistribution,
+    };
+  };
+
+  // Get data for the selected zone or all zones if zone is not chosen
+  const chartData = getChartData();
+
+  // Check if filteredData is empty
+  if (!filteredData || filteredData.length === 0) {
+    return <div>No data available</div>;
+  }
+
+  return (
+    <div>
+      {/* <h2>Zone: {filterApplied && zone}</h2> */}
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={chartData.deviceBrandDistribution}
+            dataKey="value"
+            nameKey="name"
+            fill="#8884d8"
+            label
+          >
+            {chartData.deviceBrandDistribution.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+              />
+            ))}
+          </Pie>
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={chartData.vehicleBrandDistribution}
+            dataKey="value"
+            nameKey="name"
+            fill="#8884d8"
+            label
+          >
+            {chartData.vehicleBrandDistribution.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+              />
+            ))}
+          </Pie>
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+      <ResponsiveContainer width="100%" height={300}>
+        <PieChart>
+          <Pie
+            data={chartData.vehicleCCDistribution}
+            dataKey="value"
+            nameKey="name"
+            fill="#8884d8"
+            label
+          >
+            {chartData.vehicleCCDistribution.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+              />
+            ))}
+          </Pie>
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+      {/* Bar charts */}
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartData.deviceBrandDistribution}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
-    );
-  }
-}
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartData.vehicleBrandDistribution}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#82ca9d" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default Chart;
