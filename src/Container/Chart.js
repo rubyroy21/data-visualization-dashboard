@@ -58,10 +58,15 @@ const Chart = () => {
       filteredDataByZone,
       "vehicle_cc"
     );
+    const sdkIntDistribution = calculateDistribution(
+      filteredDataByZone,
+      "sdk_int"
+    );
     return {
       deviceBrandDistribution,
       vehicleBrandDistribution,
       vehicleCCDistribution,
+      sdkIntDistribution,
     };
   };
 
@@ -106,7 +111,7 @@ const Chart = () => {
             </PieChart>
           </ResponsiveContainer>
         </Paper>
-        <Paper sx={{ padding: "10px", width: "100%" }}>
+        <Paper sx={{ padding: "10px" }}>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -129,7 +134,7 @@ const Chart = () => {
             </PieChart>
           </ResponsiveContainer>
         </Paper>
-        <Paper sx={{ padding: "10px", width: "100%" }}>
+        <Paper sx={{ padding: "10px" }}>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -157,17 +162,18 @@ const Chart = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: "20px",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "10px",
         }}
       >
-        <Paper sx={{ padding: "10px" }}>
+        <Paper sx={{ padding: "10px", width: "100%" }}>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData.deviceBrandDistribution}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill="teal" />
+              <Bar dataKey="value" fill="crimson" />
             </BarChart>
           </ResponsiveContainer>
         </Paper>
@@ -177,7 +183,51 @@ const Chart = () => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill="#8884d8" />
+              <Bar dataKey="value" fill="teal" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Paper>
+      </div>
+      {/* Add other BarCharts as needed */}
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <Paper sx={{ padding: "10px" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData.vehicleCCDistribution}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              {chartData.vehicleCCDistribution.map((entry, index) => (
+                <Bar
+                  key={`bar-${index}`}
+                  dataKey="value"
+                  stackId="a"
+                  fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+                />
+              ))}
+            </BarChart>
+          </ResponsiveContainer>
+        </Paper>
+        <Paper sx={{ padding: "10px" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData.sdkIntDistribution}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              {chartData.sdkIntDistribution.map((entry, index) => (
+                <Bar
+                  key={`bar-${index}`}
+                  dataKey="value"
+                  stackId="a"
+                  fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
+                />
+              ))}
             </BarChart>
           </ResponsiveContainer>
         </Paper>
