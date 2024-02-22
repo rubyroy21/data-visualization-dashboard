@@ -20,6 +20,7 @@ const SearchInput = ({ handleSearchChange }) => {
               display: "flex",
               alignItems: "center",
               padding: "6px 10px",
+              marginTop: "0.4em",
             }}
           >
             <InputAdornment position="start">

@@ -13,6 +13,7 @@ import {
   InputLabel,
   Select,
   Paper,
+  Typography,
 } from "@mui/material";
 import useTableStyles from "../CustomStyles/useTableStyles";
 import SearchInput from "../Components/SearchInput/SearchInput";
@@ -128,7 +129,7 @@ const GridTable = () => {
           }}
         >
           <div style={{ textAlign: "center" }}>
-            <h1>All Data</h1>
+            <Typography sx={{ fontSize: "30px" }}>All Data</Typography>
           </div>
           <div>
             <div style={{ display: "flex", gap: "10px" }}>
@@ -232,20 +233,19 @@ const GridTable = () => {
         }}
       >
         <Pagination
-          count={Math.ceil(filteredData.length / 3)}
+          count={Math.ceil(filteredData.length / 5)}
           page={page}
           onChange={handleChange}
           color="primary"
         />
       </div>
       <br />
-      <Paper sx={{ padding: "10px" }}>
-        {/* Provide filtered data to the context */}
-        <FilteredDataContext.Provider value={filteredData}>
-          {/* Render the Chart component */}
-          <Chart />
-        </FilteredDataContext.Provider>
-      </Paper>
+
+      {/* Provide filtered data to the context */}
+      <FilteredDataContext.Provider value={filteredData}>
+        {/* Render the Chart component */}
+        <Chart />
+      </FilteredDataContext.Provider>
     </div>
   );
 };

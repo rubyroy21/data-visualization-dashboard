@@ -4,7 +4,14 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 
 const NavList = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "7px",
+      }}
+    >
       <ListItem button>
         <ListItemIcon>
           <DashboardIcon />

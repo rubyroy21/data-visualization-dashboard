@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from "recharts";
 import { FilteredDataContext } from "./GridTable";
+import { Paper } from "@mui/material";
 
 const Chart = () => {
   const filteredData = useContext(FilteredDataContext);
@@ -73,82 +74,114 @@ const Chart = () => {
   }
 
   return (
-    <div>
-      {/* <h2>Zone: {filterApplied && zone}</h2> */}
-      <ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={chartData.deviceBrandDistribution}
-            dataKey="value"
-            nameKey="name"
-            fill="#8884d8"
-            label
-          >
-            {chartData.deviceBrandDistribution.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-              />
-            ))}
-          </Pie>
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={chartData.vehicleBrandDistribution}
-            dataKey="value"
-            nameKey="name"
-            fill="#8884d8"
-            label
-          >
-            {chartData.vehicleBrandDistribution.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-              />
-            ))}
-          </Pie>
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height={300}>
-        <PieChart>
-          <Pie
-            data={chartData.vehicleCCDistribution}
-            dataKey="value"
-            nameKey="name"
-            fill="#8884d8"
-            label
-          >
-            {chartData.vehicleCCDistribution.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-              />
-            ))}
-          </Pie>
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      {/* Pie Charts */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <Paper sx={{ padding: "10px" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={chartData.deviceBrandDistribution}
+                dataKey="value"
+                nameKey="name"
+                fill="#8884d8"
+                label
+              >
+                {chartData.deviceBrandDistribution.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`#${Math.floor(Math.random() * 16777215).toString(
+                      16
+                    )}`}
+                  />
+                ))}
+              </Pie>
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </Paper>
+        <Paper sx={{ padding: "10px", width: "100%" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={chartData.vehicleBrandDistribution}
+                dataKey="value"
+                nameKey="name"
+                fill="#8884d8"
+                label
+              >
+                {chartData.vehicleBrandDistribution.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`#${Math.floor(Math.random() * 16777215).toString(
+                      16
+                    )}`}
+                  />
+                ))}
+              </Pie>
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </Paper>
+        <Paper sx={{ padding: "10px", width: "100%" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={chartData.vehicleCCDistribution}
+                dataKey="value"
+                nameKey="name"
+                fill="#8884d8"
+                label
+              >
+                {chartData.vehicleCCDistribution.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={`#${Math.floor(Math.random() * 16777215).toString(
+                      16
+                    )}`}
+                  />
+                ))}
+              </Pie>
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </Paper>
+      </div>
       {/* Bar charts */}
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData.deviceBrandDistribution}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData.vehicleBrandDistribution}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="#82ca9d" />
-        </BarChart>
-      </ResponsiveContainer>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <Paper sx={{ padding: "10px" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData.deviceBrandDistribution}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="teal" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Paper>
+        <Paper sx={{ padding: "10px", width: "100%" }}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={chartData.vehicleBrandDistribution}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </Paper>
+      </div>
     </div>
   );
 };
