@@ -12,7 +12,6 @@ import {
   FormControl,
   InputLabel,
   Select,
-  Paper,
   Typography,
 } from "@mui/material";
 import useTableStyles from "../CustomStyles/useTableStyles";
@@ -33,13 +32,23 @@ const GridTable = () => {
   const [filterOption, setFilterOption] = useState("");
   const [filteredData, setFilteredData] = useState(allData);
   const [flag, setFlag] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Function to handle API request errors
+  const handleApiError = (error) => {
+    setError(error.message || "An error occurred");
+  };
 
   useEffect(() => {
-    setFilteredData(allData);
+    try {
+      setFilteredData(allData);
+    } catch (error) {
+      handleApiError(error);
+    }
   }, [allData]);
 
   const handleChange = (event, value) => {
-    setPage(paginator(filteredData, value, 3).page);
+    setPage(paginator(filteredData, value, 5).page);
   };
 
   const optionSelected = (e) => {
@@ -59,6 +68,7 @@ const GridTable = () => {
   const renderTableData = (data) => {
     return (
       <>
+        {error && <div>Error: {error}</div>}
         {data &&
           paginator(data, page, 5).data.map((item, index) => {
             return (

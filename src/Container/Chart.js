@@ -18,14 +18,24 @@ const Chart = () => {
   const filteredData = useContext(FilteredDataContext);
   const [filterApplied, setFilterApplied] = useState(false);
   const [zone, setZone] = useState("All Zones");
+  const [error, setError] = useState(null);
+
+  // Function to handle API request errors
+  const handleApiError = (error) => {
+    setError(error.message || "An error occurred");
+  };
 
   useEffect(() => {
-    if (filteredData && filteredData.length > 0) {
-      setFilterApplied(true);
-      setZone(filteredData[0].zone);
-    } else {
-      setFilterApplied(false);
-      setZone("All Zones");
+    try {
+      if (filteredData && filteredData.length > 0) {
+        setFilterApplied(true);
+        setZone(filteredData[0].zone);
+      } else {
+        setFilterApplied(false);
+        setZone("All Zones");
+      }
+    } catch (error) {
+      handleApiError(error);
     }
   }, [filteredData]);
 
@@ -80,6 +90,7 @@ const Chart = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      {error && <div>Error: {error}</div>}
       {/* Pie Charts */}
       <div
         style={{

@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Getting Started with Data Visualization Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a data visualization dashboard that displays tabular data, provides filtering and searching functionalities, and visualizes the data using pie charts and bar charts.
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+1. Clone the repository:
 
-### `npm start`
+   git clone <repository-url>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Navigate to the project directory:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   cd project-directory
 
-### `npm test`
+3. Install dependencies:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   npm install
 
-### `npm run build`
+## Running the Application
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To run the application locally:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Start the development server:
+   npm start
+2. Open your browser and navigate to `http://localhost:3000`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Components Overview
 
-### `npm run eject`
+### GridTable Component
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The `GridTable` component displays tabular data with pagination, filtering, and searching functionalities.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Pagination**: Navigate through multiple pages of data.
+- **Filtering**: Filter data by various attributes such as zone, device brand, vehicle brand, etc.
+- **Searching**: Search for specific data entries by username.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Chart Component
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The `Chart` component visualizes data using pie charts and bar charts.
 
-## Learn More
+- **Pie Charts**: Visualize distribution of device brand, vehicle brand, and vehicle CC.
+- **Bar Charts**: Visualize distribution of device brand and vehicle brand.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### API Integration Component
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This component handles API requests to fetch and manipulate data for the `GridTable` and `Chart` components.
 
-### Code Splitting
+## Interacting with Components
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### GridTable Component
 
-### Analyzing the Bundle Size
+- **Pagination**: Use the pagination controls at the bottom of the table to navigate between pages.
+- **Filtering**: Select filter options from the dropdown menu to filter data by specific attributes.
+- **Searching**: Enter search queries in the search input field to find specific data entries.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Chart Component
 
-### Making a Progressive Web App
+- **Interpretation**: Analyze the visualizations to gain insights into the distribution of device brand, vehicle brand, and vehicle CC.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Error Handling
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Errors, if any, will be displayed on the UI along with instructions on how to proceed. Please follow the provided instructions in case of errors.
