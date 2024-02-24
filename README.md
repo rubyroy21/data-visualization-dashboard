@@ -16,6 +16,8 @@ This project is a data visualization dashboard that displays tabular data, provi
 
    npm install
 
+   Note: If npm install doesn't work then please write the command of npm install --force, because of some version problems npm install was not working.
+
 ## Running the Application
 
 To run the application locally:
